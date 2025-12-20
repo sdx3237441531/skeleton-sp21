@@ -99,18 +99,6 @@ public class TimeSLList {
         times.addLast(sw6.elapsedTime());
         opCounts.addLast(10000);
 
-        SLList<Integer> test7 = new SLList<>();
-        for (int i = 0; i < 64000; i++) {
-            test7.addLast(i);
-        }
-        Stopwatch sw7 = new Stopwatch();
-        for (int i = 0; i < 10000; i++) {
-            test7.addLast(i);
-        }
-        Ns.addLast(64000);
-        times.addLast(sw7.elapsedTime());
-        opCounts.addLast(10000);
-
         printTimingTable(Ns, times, opCounts);
     }
 
