@@ -1,4 +1,6 @@
 package timingtest;
+import edu.neu.ccs.gui.StringObjectRadioPanel;
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Stopwatch;
 
 /**
@@ -22,6 +24,93 @@ public class TimeAList {
     }
 
     public static void timeAListConstruction() {
-        // TODO: YOUR CODE HERE
+        AList<Integer> Ns = new AList<>();
+        AList<Double> times = new AList<>();
+        AList<Integer> opCounts = new AList<>();
+
+        int cnt = 0;
+        Stopwatch sw = new Stopwatch();
+        AList<Integer> test = new AList<>();
+        for (int i = 0; i < 1000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 1000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 2000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 4000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 8000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 16000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 32000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 64000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 128000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        for (int i = 0; i < 256000; i++) {
+            test.addLast(i);
+            cnt += 1;
+        }
+        Ns.addLast(cnt);
+        times.addLast(sw.elapsedTime());
+        opCounts.addLast(cnt);
+
+        printTimingTable(Ns, times, opCounts);
     }
 }
