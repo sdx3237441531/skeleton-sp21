@@ -28,88 +28,19 @@ public class TimeAList {
         AList<Double> times = new AList<>();
         AList<Integer> opCounts = new AList<>();
 
-        int cnt = 0;
-        Stopwatch sw = new Stopwatch();
+        int N = 1000;
         AList<Integer> test = new AList<>();
-        for (int i = 0; i < 1000; i++) {
-            test.addLast(i);
-            cnt += 1;
+        Stopwatch sw = new Stopwatch();
+        while (N <= 128000) {
+            int size = test.size();
+            for (int i = size; i < N; i++) {
+                test.addLast(i);
+            }
+            Ns.addLast(N);
+            times.addLast(sw.elapsedTime());
+            opCounts.addLast(N);
+            N = N * 2;
         }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 1000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 2000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 4000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 8000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 16000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 32000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 64000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 128000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
-
-        for (int i = 0; i < 256000; i++) {
-            test.addLast(i);
-            cnt += 1;
-        }
-        Ns.addLast(cnt);
-        times.addLast(sw.elapsedTime());
-        opCounts.addLast(cnt);
 
         printTimingTable(Ns, times, opCounts);
     }
