@@ -33,7 +33,7 @@ public class TimeSLList {
         }
         Stopwatch sw1 = new Stopwatch();
         for (int i = 0; i < 10000; i++) {
-            test1.addLast(i);
+            test1.getLast();
         }
         Ns.addLast(1000);
         times.addLast(sw1.elapsedTime());
@@ -45,7 +45,7 @@ public class TimeSLList {
         }
         Stopwatch sw2 = new Stopwatch();
         for (int i = 0; i < 10000; i++) {
-            test2.addLast(i);
+            test2.getLast();
         }
         Ns.addLast(2000);
         times.addLast(sw2.elapsedTime());
@@ -57,7 +57,7 @@ public class TimeSLList {
         }
         Stopwatch sw3 = new Stopwatch();
         for (int i = 0; i < 10000; i++) {
-            test3.addLast(i);
+            test3.getLast();
         }
         Ns.addLast(4000);
         times.addLast(sw3.elapsedTime());
@@ -69,7 +69,7 @@ public class TimeSLList {
         }
         Stopwatch sw4 = new Stopwatch();
         for (int i = 0; i < 10000; i++) {
-            test4.addLast(i);
+            test4.getLast();
         }
         Ns.addLast(8000);
         times.addLast(sw4.elapsedTime());
@@ -81,7 +81,7 @@ public class TimeSLList {
         }
         Stopwatch sw5 = new Stopwatch();
         for (int i = 0; i < 10000; i++) {
-            test5.addLast(i);
+            test5.getLast();
         }
         Ns.addLast(16000);
         times.addLast(sw5.elapsedTime());
@@ -93,7 +93,7 @@ public class TimeSLList {
         }
         Stopwatch sw6 = new Stopwatch();
         for (int i = 0; i < 10000; i++) {
-            test6.addLast(i);
+            test6.getLast();
         }
         Ns.addLast(32000);
         times.addLast(sw6.elapsedTime());
@@ -101,5 +101,4 @@ public class TimeSLList {
 
         printTimingTable(Ns, times, opCounts);
     }
-
 }
