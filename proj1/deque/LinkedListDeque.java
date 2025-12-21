@@ -42,10 +42,11 @@ public class LinkedListDeque<T> {
     }
 
     public boolean isEmpty() {
-        if (sentinel.prev == sentinel && sentinel.next == sentinel) {
+        if (size == 0) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public int size() {
@@ -65,8 +66,10 @@ public class LinkedListDeque<T> {
             return null;
         }
         T x = sentinel.next.item;
-        sentinel.next.next.prev = sentinel;
+        sentinel.next.prev = null;
         sentinel.next = sentinel.next.next;
+        sentinel.next.prev.next = null;
+        sentinel.next.prev = sentinel;
         size -= 1;
         return x;
     }
@@ -76,7 +79,9 @@ public class LinkedListDeque<T> {
             return null;
         }
         T x = sentinel.prev.item;
+        sentinel.prev.next = null;
         sentinel.prev = sentinel.prev.prev;
+        sentinel.prev.next.prev = null;
         sentinel.prev.next = sentinel;
         size -= 1;
         return x;
