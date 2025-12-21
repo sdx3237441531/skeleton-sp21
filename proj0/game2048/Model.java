@@ -173,7 +173,7 @@ public class Model extends Observable {
         return changed;
     }
 
-    public int findTheFirstTileIndex(int col, int size) {
+    private int findTheFirstTileIndex(int col, int size) {
         for (int i = size - 1; i >= 0; i--) {
             if (board.tile(col, i) != null) {
                 return i;
@@ -182,7 +182,7 @@ public class Model extends Observable {
         return -1;
     }
 
-    public boolean existOtherTile(int start, int col, int size) {
+    private boolean existOtherTile(int start, int col, int size) {
         for (int i = start; i >= 0; i--) {
             if (board.tile(col, i) != null) {
                 return true;
@@ -191,7 +191,7 @@ public class Model extends Observable {
         return false;
     }
 
-    public void mergeMove(Tile first, int col, int size) {
+    private void mergeMove(Tile first, int col, int size) {
         Tile second = null;
         int position = size - 2;
         int row = size - 1;
@@ -209,7 +209,7 @@ public class Model extends Observable {
         }
     }
 
-    public void basicMove(int col, int size) {
+    private void basicMove(int col, int size) {
         boolean isFirst = false;
         int position = size;
         for (int i = size - 2; i >= 0; i--) {
