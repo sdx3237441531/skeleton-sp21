@@ -1,5 +1,6 @@
 package deque;
 
+import jh61b.junit.In;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -143,6 +144,8 @@ public class LinkedListDequeTest {
         lld.addLast(15);
 
         assertEquals(5, (int)lld.get(1));
+        assertEquals(10, (int)lld.get(0));
+        assertEquals(15, (int)lld.get(2));
         assertEquals(null, lld.get(-1));
         assertEquals(null, lld.get(100));
     }
@@ -158,7 +161,30 @@ public class LinkedListDequeTest {
         lld.addLast(15);
 
         assertEquals(5, (int)lld.get(1));
+        assertEquals(10, (int)lld.get(0));
+        assertEquals(15, (int)lld.get(2));
         assertEquals(null, lld.get(-1));
         assertEquals(null, lld.get(100));
+    }
+
+    @Test
+    public void addRemoveTest2() {
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+
+        for (int i = 4; i >= 0; i--) {
+            lld.addFirst(i);
+        }
+
+        for (int i = 5; i < 10; i++) {
+            lld.addLast(i);
+        }
+
+        for (int i = 0; i < lld.size(); i++) {
+            assertEquals(i, (int)lld.get(i));
+        }
+
+        for (int i = lld.size() - 1; i >= 0; i--) {
+            assertEquals(i, (int)lld.removeLast());
+        }
     }
 }
