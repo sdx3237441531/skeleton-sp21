@@ -1,8 +1,9 @@
 package deque;
 
 import java.lang.reflect.Parameter;
+import java.util.Iterator;
 
-public class ArrayDeque<T> {
+public class ArrayDeque<T> implements Iterable<T>{
     private int size;
     private int senFront; //指向前端元素所在的位置
     private int senBack; //指向后端元素所在的位置
@@ -126,5 +127,30 @@ public class ArrayDeque<T> {
             return null;
         }
         return items[(senFront + index) % items.length];
+    }
+
+    public Iterator<T> iterator() {
+        return new ArrayDequeIterator();
+    }
+
+    private class ArrayDequeIterator implements Iterator {
+        private int wizPos;
+
+        public ArrayDequeIterator() {
+            wizPos = 0;
+        }
+
+        public boolean hasNext() {
+            if (wizPos < size) {
+                return true;
+            }
+            return false;
+        }
+
+        public T next() {
+            T x = items[wizPos];
+            wizPos += 1;
+            return x;
+        }
     }
 }
