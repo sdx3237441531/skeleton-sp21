@@ -187,4 +187,50 @@ public class LinkedListDequeTest {
             assertEquals(i, (int)lld.removeLast());
         }
     }
+
+    @Test
+    public void LinkedListDequeTest() {
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+
+        for (int i = 4; i >= 0; i--) {
+            lld.addFirst(i);
+        }
+
+        for (int i = 5; i < 10; i++) {
+            lld.addLast(i);
+        }
+
+        for (int x : lld) {
+            System.out.println(x);
+        }
+    }
+
+    @Test
+    public void testRemoveSingleElement() {
+        LinkedListDeque<Integer> deque = new LinkedListDeque<>();
+
+        // 测试1：添加一个元素后移除
+        deque.addFirst(1);
+        assertEquals(Integer.valueOf(1), deque.removeFirst());
+        assertTrue("链表应为空", deque.isEmpty());
+        assertEquals(0, deque.size());
+
+        // 测试2：从另一边测试
+        deque.addLast(2);
+        assertEquals(Integer.valueOf(2), deque.removeLast());
+        assertTrue("链表应为空", deque.isEmpty());
+        assertEquals(0, deque.size());
+
+        // 测试3：边界情况测试 - 连续操作
+        deque.addFirst(10);
+        deque.addLast(20);
+        deque.addFirst(30);
+
+        assertEquals(Integer.valueOf(30), deque.removeFirst()); // 移除30
+        assertEquals(Integer.valueOf(20), deque.removeLast());  // 移除20
+        assertEquals(Integer.valueOf(10), deque.removeFirst()); // 移除10
+
+        assertTrue("所有元素移除后应为空", deque.isEmpty());
+        assertEquals(0, deque.size());
+    }
 }
