@@ -1,8 +1,5 @@
 package deque;
 
-import afu.org.checkerframework.checker.oigj.qual.O;
-import org.junit.Test;
-
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
