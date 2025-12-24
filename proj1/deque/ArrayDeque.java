@@ -3,7 +3,7 @@ package deque;
 import java.lang.reflect.Parameter;
 import java.util.Iterator;
 
-public class ArrayDeque<T> implements Iterable<T>{
+public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
     private int size;
     private int senFront; //指向前端元素所在的位置
     private int senBack; //指向后端元素所在的位置
@@ -64,14 +64,6 @@ public class ArrayDeque<T> implements Iterable<T>{
             senBack = (senBack + 1) % items.length;
             items[senBack] = item;
             size += 1;
-        }
-    }
-
-    public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        } else {
-            return false;
         }
     }
 
