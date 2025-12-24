@@ -1,6 +1,5 @@
 package deque;
 
-import jh61b.junit.In;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -298,5 +297,24 @@ public class LinkedListDequeTest {
         lld2.addLast(15);
 
         assertTrue(lld1.equals(lld2));
+    }
+
+    @Test
+    public void lldEqulasAdTest () {
+        LinkedListDeque<String> lld = new LinkedListDeque<>();
+
+        lld.addFirst("apple");
+        lld.addFirst("banana");
+        lld.addLast("cat");
+        lld.addLast("dog");
+
+        ArrayDeque<String> ad = new ArrayDeque<>();
+
+        ad.addFirst("apple");
+        ad.addFirst("banana");
+        ad.addLast("cat");
+        ad.addLast("dog");
+
+        assertTrue(lld.equals(ad));
     }
 }
