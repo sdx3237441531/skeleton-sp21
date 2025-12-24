@@ -281,4 +281,23 @@ public class ArrayDequeTest {
 
         assertTrue(ad.equals(lld));
     }
+
+    @Test
+    public void lldEqualsAdTest2() {
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
+
+        ad.addFirst(5);
+        ad.addFirst(10);
+        ad.addLast(15);
+        ad.addLast(20);
+
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+
+        lld.addFirst(5);
+        lld.addFirst(10);
+        lld.addLast(15);
+        lld.addLast(20);
+
+        assertTrue(lld.equals(ad));
+    }
 }
