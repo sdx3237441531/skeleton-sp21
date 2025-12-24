@@ -1,9 +1,8 @@
 package deque;
 
-import java.lang.reflect.Parameter;
 import java.util.Iterator;
 
-public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
+public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
     private int size;
     private int senFront; //指向前端元素所在的位置
     private int senBack; //指向后端元素所在的位置
@@ -16,13 +15,13 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         items = (T[]) new Object[8];
     }
 
-    public void addTheFirstItem(T item) {
+    private void addTheFirstItem(T item) {
         items[0] = item;
         size += 1;
         senFront = senBack = 0;
     }
 
-    public void arrayCopy(T[] a, T[] items) {
+    private void arrayCopy(T[] a, T[] items) {
         for (int i = 0; i < size; i++) {
             a[i] = items[senFront];
             senFront = (senFront + 1) % items.length;
@@ -31,7 +30,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         senBack = size - 1;
     }
 
-    public void expand() {
+    private void expand() {
         T[] a = (T[]) new Object[size * 2];
         arrayCopy(a, items);
         items = a;
@@ -82,7 +81,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         }
     }
 
-    public void shrink() {
+    private void shrink() {
         T[] a = (T[]) new Object[items.length / 2];
         arrayCopy(a, items);
         items = a;
@@ -147,7 +146,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         }
 
         public T next() {
-            T x = items[wizPos];
+            T x = get(wizPos);
             wizPos += 1;
             return x;
         }
@@ -158,10 +157,15 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         if (object == null) {
             return false;
         }
-        if (!(object instanceof ArrayDeque)) {
+        if (!(object instanceof LinkedListDeque) && !(object instanceof ArrayDeque)) {
             return false;
         }
-        ArrayDeque<T> o = (ArrayDeque<T>) object;
+        Deque<T> o = (Deque<T>) object;
+        if (object instanceof LinkedListDeque) {
+            o = (LinkedListDeque<T>) object;
+        } else {
+            o = (Deque<T>) object;
+        }
         if (o.size() != this.size()) {
             return false;
         }
