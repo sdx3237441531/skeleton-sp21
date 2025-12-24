@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<T> implements Iterable<T> {
+public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     private class DequeNode<T> {
         DequeNode<T> prev;
         DequeNode<T> next;
@@ -43,14 +43,6 @@ public class LinkedListDeque<T> implements Iterable<T> {
         p.next = sentinel;
         sentinel.prev = p;
         size += 1;
-    }
-
-    public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public int size() {
