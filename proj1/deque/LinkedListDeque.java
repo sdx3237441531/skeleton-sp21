@@ -1,5 +1,6 @@
 package deque;
 
+import afu.org.checkerframework.checker.oigj.qual.O;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -27,6 +28,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         size = 0;
     }
 
+    @Override
     public void addFirst(T item) {
         DequeNode<T> p = new DequeNode<>(item);
         p.prev = sentinel;
@@ -36,6 +38,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         size += 1;
     }
 
+    @Override
     public void addLast(T item) {
         DequeNode<T> p = new DequeNode<>(item);
         sentinel.prev.next = p;
@@ -45,10 +48,12 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         size += 1;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void printDeque() {
         DequeNode<T> p = sentinel.next;
         while (p != sentinel) {
@@ -57,6 +62,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         }
     }
 
+    @Override
     public T removeFirst() {
         if (isEmpty()) {
             return null;
@@ -70,6 +76,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         return x;
     }
 
+    @Override
     public T removeLast() {
         if (isEmpty()) {
             return null;
@@ -83,6 +90,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         return x;
     }
 
+    @Override
     public T get(int index) {
         if (index < 0 || index > size - 1 || isEmpty()) {
             return null;
@@ -114,7 +122,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         return new LinkedListDequeIterator();
     }
 
-    private class LinkedListDequeIterator implements Iterator {
+    private class LinkedListDequeIterator implements Iterator<T> {
         private int wizPos;
         private DequeNode<T> p;
 
@@ -151,7 +159,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
             return false;
         }
         for (int i = 0, size = this.size(); i < size; i++) {
-            if (o.get(i) != this.get(i)) {
+            if (!o.get(i).equals(this.get(i))) {
                 return false;
             }
         }
