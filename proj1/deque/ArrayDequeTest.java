@@ -3,7 +3,9 @@ package deque;
 import jh61b.junit.In;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -172,5 +174,67 @@ public class ArrayDequeTest {
         for (int x : ad) {
             System.out.println(x);
         }
+    }
+
+    @Test
+    public void equalsTest() {
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+
+        ad1.addFirst(5);
+        ad1.addFirst(10);
+        ad1.addLast(15);
+
+        ArrayDeque<Integer> ad2 = null;
+
+        assertFalse(ad1.equals(ad2));
+    }
+
+    @Test
+    public void equalsTest2() {
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+
+        ad1.addFirst(5);
+        ad1.addFirst(10);
+        ad1.addLast(15);
+
+        ArrayDeque<Integer> ad2 = new ArrayDeque<>();
+
+        ad2.addLast(10);
+
+        assertFalse(ad1.equals(ad2));
+        assertFalse(ad2.equals(ad1));
+    }
+
+    @Test
+    public void equalsTest3() {
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
+
+        ad.addFirst(5);
+        ad.addFirst(10);
+        ad.addLast(15);
+
+        List<Integer> l = new ArrayList<>();
+        l.add(10);
+        l.add(5);
+        l.add(15);
+
+        assertFalse(ad.equals(l));
+    }
+
+    @Test
+    public void eaualsTest4() {
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+
+        ad1.addFirst(5);
+        ad1.addFirst(10);
+        ad1.addLast(15);
+
+        ArrayDeque<Integer> ad2 = new ArrayDeque<>();
+
+        ad2.addFirst(5);
+        ad2.addFirst(10);
+        ad2.addLast(15);
+
+        assertTrue(ad1.equals(ad2));
     }
 }
