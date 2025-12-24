@@ -2,6 +2,10 @@ package deque;
 
 import jh61b.junit.In;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 
@@ -232,5 +236,67 @@ public class LinkedListDequeTest {
 
         assertTrue("所有元素移除后应为空", deque.isEmpty());
         assertEquals(0, deque.size());
+    }
+
+    @Test
+    public void equalsTest() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+
+        lld1.addFirst(5);
+        lld1.addFirst(10);
+        lld1.addLast(15);
+
+        LinkedListDeque<Integer> lld2 = null;
+
+        assertFalse(lld1.equals(lld2));
+    }
+
+    @Test
+    public void equalsTest2() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+
+        lld1.addFirst(5);
+        lld1.addFirst(10);
+        lld1.addLast(15);
+
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
+
+        lld2.addLast(10);
+
+        assertFalse(lld1.equals(lld2));
+        assertFalse(lld2.equals(lld1));
+    }
+
+    @Test
+    public void equalsTest3() {
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+
+        lld.addFirst(5);
+        lld.addFirst(10);
+        lld.addLast(15);
+
+        List<Integer> l = new ArrayList<>();
+        l.add(10);
+        l.add(5);
+        l.add(15);
+
+        assertFalse(lld.equals(l));
+    }
+
+    @Test
+    public void eaualsTest4() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+
+        lld1.addFirst(5);
+        lld1.addFirst(10);
+        lld1.addLast(15);
+
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
+
+        lld2.addFirst(5);
+        lld2.addFirst(10);
+        lld2.addLast(15);
+
+        assertTrue(lld1.equals(lld2));
     }
 }
