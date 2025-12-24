@@ -1,6 +1,5 @@
 package deque;
 
-import jh61b.junit.In;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -177,6 +176,32 @@ public class ArrayDequeTest {
     }
 
     @Test
+    public void iteratorStringTest() {
+        ArrayDeque<String> ad = new ArrayDeque<>();
+
+        ad.addFirst("apple");
+        ad.addFirst("banana");
+        ad.addLast("cat");
+        ad.addLast("dog");
+
+        Iterator<String> seer = ad.iterator();
+
+        assertTrue(seer.hasNext());
+        assertEquals("banana", seer.next());
+
+        assertTrue(seer.hasNext());
+        assertEquals("apple", seer.next());
+
+        assertTrue(seer.hasNext());
+        assertEquals("cat", seer.next());
+
+        assertTrue(seer.hasNext());
+        assertEquals("dog", seer.next());
+
+        assertFalse(seer.hasNext());
+    }
+
+    @Test
     public void equalsTest() {
         ArrayDeque<Integer> ad1 = new ArrayDeque<>();
 
@@ -236,5 +261,24 @@ public class ArrayDequeTest {
         ad2.addLast(15);
 
         assertTrue(ad1.equals(ad2));
+    }
+
+    @Test
+    public void lldEqualsAdTest() {
+        ArrayDeque<String> ad = new ArrayDeque<>();
+
+        ad.addFirst("apple");
+        ad.addFirst("banana");
+        ad.addLast("cat");
+        ad.addLast("dog");
+
+        LinkedListDeque<String> lld = new LinkedListDeque<>();
+
+        lld.addFirst("apple");
+        lld.addFirst("banana");
+        lld.addLast("cat");
+        lld.addLast("dog");
+
+        assertTrue(ad.equals(lld));
     }
 }
