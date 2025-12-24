@@ -37,6 +37,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         items = a;
     }
 
+    @Override
     public void addFirst(T item) {
         if (size == 0) {
             addTheFirstItem(item);
@@ -54,6 +55,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         }
     }
 
+    @Override
     public void addLast(T item) {
         if (size == 0) {
             addTheFirstItem(item);
@@ -67,10 +69,12 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         }
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void printDeque() {
         for (int i = 0; i < size; i++) {
             System.out.println(items[senFront]);
@@ -84,6 +88,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         items = a;
     }
 
+    @Override
     public T removeFirst() {
         if (isEmpty()) {
             return null;
@@ -97,6 +102,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         return x;
     }
 
+    @Override
     public T removeLast() {
         if (isEmpty()) {
             return null;
@@ -114,6 +120,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         return x;
     }
 
+    @Override
     public T get(int index) {
         if (index < 0 || index > size - 1 || isEmpty()) {
             return null;
@@ -159,7 +166,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
             return false;
         }
         for (int i = 0, size = this.size(); i < size; i += 1) {
-            if (this.get(i) != o.get(i)) {
+            if (!this.get(i).equals(o.get(i))) {
                 return false;
             }
         }
