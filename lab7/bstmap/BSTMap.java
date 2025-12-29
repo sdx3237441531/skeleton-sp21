@@ -128,16 +128,82 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     @Override
     public V remove(K key) {
-        BSTNode prev = null;
-        BSTNode succ = root;
-        return remove(prev, succ, key);
+        BSTNode parent = null;
+        BSTNode child = root;
+        return remove(parent, child, key);
     }
 
-    private BSTNode findPrev(BSTNode p) {
+    private BSTNode findPrevParent(BSTNode p) {
+        BSTNode parent = null;
         while (p.right != null) {
+            parent = p;
             p = p.right;
         }
-        return p;
+        return parent;
+    }
+
+    private V removeNode(BSTNode parent, BSTNode child) {
+        V removeValue = null;
+        if (parent == null) {
+            // 说明要删除的是根节点
+            removeValue = root.value;
+            if (child.left == null && child.right == null) {
+                root = null;
+            } else if (child.left != null && child.right != null) {
+                BSTNode prevParent = findPrevParent(child.left);
+                BSTNode prev = prevParent.right;
+                prevParent.right = prev.left;
+                prev.left = root.left;
+                prev.right = root.right;
+                root.left = null;
+                root.right = null;
+                root = prev;
+            } else {
+                if (child.left == null) {
+                    root = child.right;
+                } else {
+                    root = child.left;
+                }
+            }
+        } else {
+            removeValue = child.value;
+            int cmp = child.key.compareTo(parent.key);
+            if (child.left == null && child.right == null) {
+                if (cmp < 0) {
+                    parent.left = null;
+                } else {
+                    parent.right = null;
+                }
+            } else if (child.left != null && child.right != null) {
+                BSTNode prevParent = findPrevParent(child.left);
+                BSTNode prev = prevParent.right;
+                prevParent.right = prev.left;
+                prev.left = child.left;
+                prev.right = child.right;
+                child.left = null;
+                child.right = null;
+                if (cmp < 0) {
+                    parent.left = prev;
+                } else {
+                    parent.right = prev;
+                }
+            } else {
+                if (cmp < 0) {
+                    if (child.left == null) {
+                        parent.left = child.right;
+                    } else {
+                        parent.left = child.left;
+                    }
+                } else {
+                    if (child.left == null) {
+                        parent.right = child.right;
+                    } else {
+                        parent.right = child.left;
+                    }
+                }
+            }
+        }
+        return removeValue;
     }
 
     private V remove(BSTNode parent, BSTNode child, K key) {
@@ -152,33 +218,36 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         } else if (cmp < 0) {
             removeValue = remove(child, child.left, key);
         } else {
-            removeValue = root.value;
-            if (parent == null) {
-                // 说明要删除的是根节点
-                if (child.left == null && child.right == null) {
-                    root = null;
-                } else if (child.left != null && child.right != null) {
-                    BSTNode prev = findPrev(child.left);
-                    prev.left = root.left;
-                    prev.right = root.right;
-                    root.left = null;
-                    root.right = null;
-                    root = prev;
-                } else {
-                    if (child.left == null) {
-                        root = child.right;
-                    } else {
-                        root = child.left;
-                    }
-                }
-            }
+            removeValue = removeNode(parent, child);
         }
         return removeValue;
     }
 
     @Override
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        BSTNode parent = null;
+        BSTNode child = root;
+        return remove(parent, child, key, value);
+    }
+
+    private V remove(BSTNode parent, BSTNode child, K key, V value) {
+        if (child == null) {
+            return null;
+        }
+
+        int cmp = key.compareTo(child.key);
+        V removeValue = null;
+        if (cmp > 0) {
+            removeValue = remove(child, child.right, key, value);
+        } else if (cmp < 0) {
+            removeValue = remove(child, child.left, key, value);
+        } else {
+            if (!child.value.equals(value)) {
+                return null;
+            }
+            removeValue = removeNode(parent, child);
+        }
+        return removeValue;
     }
 
     @Override
