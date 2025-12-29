@@ -106,7 +106,7 @@ public class TestBSTMap {
         int i = 0;
 
         while (seer.hasNext()) {
-            assertEquals(i, (int)seer.next());
+            assertEquals(i, (int) seer.next());
             i++;
         }
     }
@@ -147,7 +147,7 @@ public class TestBSTMap {
 
         b.put("a", 1);
 
-        assertEquals(1, (int)b.remove("a"));
+        assertEquals(1, (int) b.remove("a"));
         assertFalse(b.iterator().hasNext());
     }
 
@@ -166,7 +166,7 @@ public class TestBSTMap {
 
         String[] letters = {"m", "p", "r", "v", "x", "y", "z"};
 
-        assertEquals(1, (int)b.remove("k"));
+        assertEquals(1, (int) b.remove("k"));
 
         Iterator<String> seer = b.iterator();
         int i = 0;
@@ -196,7 +196,7 @@ public class TestBSTMap {
         b.put("x", 13);
         b.put("z", 14);
 
-        assertEquals(1, (int)b.remove("k"));
+        assertEquals(1, (int) b.remove("k"));
 
         String[] letters = {"a", "b", "d", "e", "f", "g", "m", "p", "r", "v", "x", "y", "z"};
 
@@ -207,5 +207,120 @@ public class TestBSTMap {
             assertEquals(letters[i], seer.next());
             i++;
         }
+    }
+
+    @Test
+    public void notRemoveRootTest1() {
+        BSTMap<String, Integer> b = new BSTMap<>();
+
+        b.put("k", 1);
+        b.put("e", 2);
+        b.put("v", 3);
+        b.put("b", 4);
+        b.put("g", 5);
+        b.put("d", 6);
+        b.put("a", 7);
+        b.put("f", 8);
+        b.put("p", 9);
+        b.put("y", 10);
+        b.put("m", 11);
+        b.put("r", 12);
+        b.put("x", 13);
+        b.put("z", 14);
+
+        assertEquals(13, (int) b.remove("x"));
+
+        int i = 0;
+        Iterator<String> seer = b.iterator();
+        String[] letters = {"a", "b", "d", "e", "f", "g", "k", "m", "p", "r", "v", "y", "z"};
+
+        while (seer.hasNext()) {
+            assertEquals(letters[i], seer.next());
+            i++;
+        }
+    }
+
+    @Test
+    public void notRemoveRootTest2() {
+        BSTMap<String, Integer> b = new BSTMap<>();
+
+        b.put("k", 1);
+        b.put("e", 2);
+        b.put("v", 3);
+        b.put("b", 4);
+        b.put("g", 5);
+        b.put("d", 6);
+        b.put("a", 7);
+        b.put("f", 8);
+        b.put("p", 9);
+        b.put("y", 10);
+        b.put("m", 11);
+        b.put("r", 12);
+        b.put("x", 13);
+        b.put("z", 14);
+
+        assertEquals(5, (int) b.remove("g"));
+
+        String[] letters = {"a", "b", "d", "e", "f", "k", "m", "p", "r", "v", "x", "y", "z"};
+        Iterator<String> seer = b.iterator();
+        int i = 0;
+
+        while (seer.hasNext()) {
+            assertEquals(letters[i], seer.next());
+            i++;
+        }
+    }
+
+    @Test
+    public void notRemoveRootTest3() {
+        BSTMap<String, Integer> b = new BSTMap<>();
+
+        b.put("k", 1);
+        b.put("e", 2);
+        b.put("v", 3);
+        b.put("b", 4);
+        b.put("g", 5);
+        b.put("d", 6);
+        b.put("a", 7);
+        b.put("f", 8);
+        b.put("p", 9);
+        b.put("y", 10);
+        b.put("m", 11);
+        b.put("r", 12);
+        b.put("x", 13);
+        b.put("z", 14);
+
+        assertEquals(2, (int)b.remove("e"));
+
+        String[] letters = {"a", "b", "d", "f", "g", "k", "m", "p", "r", "v", "x", "y", "z"};
+        Iterator<String> seer = b.iterator();
+        int i = 0;
+
+        while (seer.hasNext()) {
+            assertEquals(letters[i], seer.next());
+            i++;
+        }
+    }
+
+    @Test
+    public void removeKeyAndValueTest() {
+        BSTMap<String, Integer> b = new BSTMap<>();
+
+        b.put("k", 1);
+        b.put("e", 2);
+        b.put("v", 3);
+        b.put("b", 4);
+        b.put("g", 5);
+        b.put("d", 6);
+        b.put("a", 7);
+        b.put("f", 8);
+        b.put("p", 9);
+        b.put("y", 10);
+        b.put("m", 11);
+        b.put("r", 12);
+        b.put("x", 13);
+        b.put("z", 14);
+
+        assertEquals(null, b.remove("v", 8));
     }
 }
