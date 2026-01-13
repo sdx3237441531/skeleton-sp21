@@ -28,6 +28,7 @@ public class Main {
                 String message = args[1];
                 if (message.equals("")) {
                     System.out.println("Please enter a commit message.");
+                    System.exit(0);
                 }
                 Repository.commit(message);
                 break;
