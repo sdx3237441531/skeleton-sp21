@@ -48,8 +48,23 @@ public class Repository {
     public static final File ADDSTAGE_DIR = join(GITLET_DIR, "addstage");
     // removestage目录，暂存区中跟踪的删除文件
     public static final File REMOVESTAGE_DIR = join(GITLET_DIR, "removestage");
-    // 文件变量，用于存储当前分支
-    private static File currentBranch;
+
+    //获取当前分支
+    private static File getCurrentBranch() {
+        // 获取当前分支指向的Commit的ID
+        String currentCommitID = Utils.readContentsAsString(HEAD);
+        // 在HEADS_DIR中查找当前分支
+        File[] branches = HEADS_DIR.listFiles();
+        for (File branch : branches) {
+            // 获取分支的Commit的ID
+            String branchCommitID = Utils.readContentsAsString(HEAD);
+            // 如果分支的Commit的ID和当前分支指向的Commit的ID相等，则返回
+            if (branchCommitID.equals(currentCommitID)) {
+                return branch;
+            }
+        }
+        return null;
+    }
 
     //创建文件和目录
     private static void createFileAndDir() throws IOException {
@@ -84,8 +99,6 @@ public class Repository {
         master.createNewFile();
         String branchId = initialCommit.getID();
         Utils.writeContents(master, branchId);
-        // currentBranch记录当前分支
-        currentBranch = master;
         //HEAD指针指向初始提交的ID
         Utils.writeContents(HEAD, branchId);
     }
@@ -125,7 +138,7 @@ public class Repository {
         File addstageDirectoryFile = findBlobs(ADDSTAGE_DIR, fileName);
         //如果存在，则将其删除
         if (addstageDirectoryFile != null) {
-            Utils.restrictedDelete(addstageDirectoryFile);
+            addstageDirectoryFile.delete();
         }
 
         //创建文件对象
@@ -136,6 +149,7 @@ public class Repository {
         String currentCommitId = Utils.readContentsAsString(HEAD);
         // 获取当前的Commit
         File currentCommitFile = findFile(COMMIT, currentCommitId);
+        System.out.println(currentCommitFile);
         Commit currentCommit = readObject(currentCommitFile, Commit.class);
         //查找是否有与当前工作区文件ID相同的文件
         TreeMap<String, Blobs> blobID = currentCommit.getBlobID();
@@ -214,7 +228,7 @@ public class Repository {
         //HEAD和当前分支指向新的Commit对象
         String newCurrentCommitID = newCurrentCommit.getID();
         Utils.writeContents(HEAD, newCurrentCommitID);
-        Utils.writeContents(currentBranch, newCurrentCommitID);
+        Utils.writeContents(getCurrentBranch(), newCurrentCommitID);
     }
 
     // 打印分支
@@ -234,7 +248,7 @@ public class Repository {
             branchesName.add(branchName);
         }
         //用于记录当前分支的名称
-        String currentBranchName = currentBranch.getName();
+        String currentBranchName = getCurrentBranch().getName();
         //打印分支
         for (String branchName : branchesName) {
             if (branchName.equals(currentBranchName)) {
