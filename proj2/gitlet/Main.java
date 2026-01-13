@@ -25,12 +25,10 @@ public class Main {
                 Repository.add(fileName);
                 break;
             case "commit":
-                if (args.length < 2) {
-                    // 如果没有message信息，则退出程序
-                    System.out.println("Please enter a commit message.");
-                    System.exit(0);
-                }
                 String message = args[1];
+                if (message.equals("")) {
+                    System.out.println("Please enter a commit message.");
+                }
                 Repository.commit(message);
                 break;
             case "rm":
