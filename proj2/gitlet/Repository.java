@@ -180,7 +180,7 @@ public class Repository {
             files.put(blobIDValue.getFileName(), blobIDValue);
         }
         // 如果添加暂存区不为空
-        if (addStagedFiles != null) {
+        if (addStagedFiles.length != 0) {
             for (File addStagedFile : addStagedFiles) {
                 // 将添加暂存区中的文件快照添加到files中
                 Blobs blob = Utils.readObject(addStagedFile, Blobs.class);
@@ -190,7 +190,7 @@ public class Repository {
             }
         }
         // 如果删除暂存区不为空
-        if (removeStagedFiles != null) {
+        if (removeStagedFiles.length != 0) {
             for (File removeStagedFile : removeStagedFiles) {
                 // 将删除暂存区中的文件快照从files中删除
                 Blobs blob = Utils.readObject(removeStagedFile, Blobs.class);
