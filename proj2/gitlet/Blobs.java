@@ -29,4 +29,9 @@ public class Blobs implements Serializable {
     public String getFileName() {
         return fileName;
     }
+
+    // 获取文件内容
+    public String getFileContent() {
+        return fileContent;
+    }
 }
