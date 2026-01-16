@@ -44,8 +44,6 @@ public class Repository {
     public static final File ADDSTAGE_DIR = join(GITLET_DIR, "addstage");
     // removestage目录，暂存区中跟踪的删除文件
     public static final File REMOVESTAGE_DIR = join(GITLET_DIR, "removestage");
-    // 用于存放Commit对象，键为哈希值，值为Commit对象
-    private static final HashMap<String, Commit> commits = new HashMap<>();
 
     //获取当前分支
     private static File getCurrentBranch() {
@@ -68,8 +66,10 @@ public class Repository {
     private static Commit getCurrentCommit() {
         // 获取头指针指向的Commit的ID
         String currentCommitId = Utils.readContentsAsString(HEAD);
-        // 获取当前的Commit
-        Commit currentCommit = commits.get(currentCommitId);
+        // 在COMMIT目录下查找该文件
+        File currentCommitFile = new File(COMMIT, currentCommitId);
+        // 获取文件中存储的Commit对象
+        Commit currentCommit = Utils.readObject(currentCommitFile, Commit.class);
         return currentCommit;
     }
 
@@ -89,7 +89,7 @@ public class Repository {
     }
 
     //创建文件和目录
-    private static void createFileAndDir() throws IOException {
+    private static void createFileAndDir(){
         //对gitlet中的所有文件和目录进行初始化
         CWD.mkdir();
         if (GITLET_DIR.mkdir() == false) {
@@ -101,29 +101,39 @@ public class Repository {
         BLOB.mkdir();
         REFS_DIR.mkdir();
         HEADS_DIR.mkdir();
-        HEAD.createNewFile();
+        try {
+            HEAD.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         ADDSTAGE_DIR.mkdir();
         REMOVESTAGE_DIR.mkdir();
     }
 
-    public static void init() throws IOException {
+    public static void init(){
         //创建文件和目录
         createFileAndDir();
         // 创建初始提交
         Commit initialCommit = new Commit("initial commit", null, null);
         // 将初始提交写入COMMIT目录中
         File initialCommitFile = new File(COMMIT, initialCommit.getID());
-        initialCommitFile.createNewFile();
+        try {
+            initialCommitFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Utils.writeObject(initialCommitFile, initialCommit);
         // master分支指向初始提交的ID
         File master = new File(HEADS_DIR, "master");
-        master.createNewFile();
+        try {
+            master.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         String branchId = initialCommit.getID();
         Utils.writeContents(master, branchId);
         // HEAD指针指向初始提交的ID
         Utils.writeContents(HEAD, branchId);
-        // 将初始提交添加到commits映射中
-        commits.put(initialCommit.getID(), initialCommit);
     }
 
     //在dir目录下查找文件名为fileName的文件，如果没找到，返回null
@@ -201,7 +211,7 @@ public class Repository {
     }
 
     // 提交
-    public static void commit(String message) throws IOException {
+    public static void commit(String message) {
         // 获取添加暂存区的所有文件
         File[] addStagedFiles = ADDSTAGE_DIR.listFiles();
         // 获取移除暂存区的所有文件
@@ -260,14 +270,16 @@ public class Repository {
         Utils.writeContents(getCurrentBranch(), newCurrentCommitID);
         // 创建新的Commit对象放在Commit目录中
         File newCurrentCommitFile = new File(COMMIT, newCurrentCommitID);
-        newCurrentCommitFile.createNewFile();
+        try {
+            newCurrentCommitFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Utils.writeObject(newCurrentCommitFile, newCurrentCommit);
-        // 将新的Commit对象放在commits映射中
-        commits.put(newCurrentCommitID, newCurrentCommit);
     }
 
     // 删除
-    public static void rm(String fileName) throws IOException {
+    public static void rm(String fileName) {
         // 在添加暂存区查找是否有文件名相同的文件
         File addStageFile = findBlobs(ADDSTAGE_DIR, fileName);
         // 获取当前Commit
@@ -289,7 +301,11 @@ public class Repository {
         if (commitBlob != null) {
             String commitBlobID = commitBlob.getID();
             File removeStageFile = new File(REMOVESTAGE_DIR, commitBlobID);
-            removeStageFile.createNewFile();
+            try {
+                removeStageFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Utils.writeObject(removeStageFile, commitBlob);
             // 如果用户尚未删除工作目录中的该文件，则将其从工作目录删除
             if (workingDirectoryFile != null) {
@@ -457,7 +473,8 @@ public class Repository {
     // 第二种情况，传递指定Commit的ID和文件名
     public static void checkout(String commitId, String fileName) {
         // 获取ID为commitID的Commit对象
-        Commit commit = commits.get(commitId);
+        File commitFile = new File(COMMIT, commitId);
+        Commit commit = Utils.readObject(commitFile, Commit.class);
         // 如果commit为null，打印错误信息并终止程序
         if (commit == null) {
             System.out.println("No commit with that id exists.");
