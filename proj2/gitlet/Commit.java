@@ -24,8 +24,8 @@ public class Commit implements Serializable {
     private String ID; // SHA-1 ID
     private String date; // 提交日期
     private String message; // 日志消息
-    private TreeMap<String, Blobs> blobID = new TreeMap<>(); // 文件ID
-    private TreeMap<String, Commit> parentId = new TreeMap<>(); // 父提交ID(不超过两个)
+    private TreeMap<String, Blobs> blobs = new TreeMap<>(); // 文件ID
+    private LinkedHashMap<String, Commit> parents = new LinkedHashMap<>(); // 父提交ID(不超过两个)
 
     //创建日期
     private String createDate(Date date) {
@@ -35,13 +35,13 @@ public class Commit implements Serializable {
         return newDateString;
     }
 
-    public Commit(String message, TreeMap<String, Blobs> blobID, TreeMap<String, Commit> parentId) {
+    public Commit(String message, TreeMap<String, Blobs> blobID, LinkedHashMap<String, Commit> parentId) {
         this.message = message;
         if (blobID != null) {
-            this.blobID = blobID;
+            this.blobs = blobID;
         }
         if (parentId != null) {
-            this.parentId = parentId;
+            this.parents = parentId;
         }
         Date now = null;
         if (message.equals("initial commit")) {
@@ -57,11 +57,11 @@ public class Commit implements Serializable {
         List<Object> l = new ArrayList<>();
         l.add(this.date);
         l.add(this.message);
-        Set<String> blobIDKeys = this.blobID.keySet();
+        Set<String> blobIDKeys = this.blobs.keySet();
         for (String blodIDKey : blobIDKeys) {
             l.add(blodIDKey);
         }
-        Set<String> parentIDKeys = this.parentId.keySet();
+        Set<String> parentIDKeys = this.parents.keySet();
         for (String parentIDKey : parentIDKeys) {
             l.add(parentIDKey);
         }
@@ -73,8 +73,23 @@ public class Commit implements Serializable {
         return ID;
     }
 
+    // 获取当前提交的日期
+    public String getDate() {
+        return date;
+    }
+
+    // 获取当前提交的信息
+    public String getMessage() {
+        return message;
+    }
+
     //获取指向的文件
-    public TreeMap<String, Blobs> getBlobID() {
-        return blobID;
+    public TreeMap<String, Blobs> getBlobs() {
+        return blobs;
+    }
+
+    // 获取父提交
+    public LinkedHashMap<String, Commit> getParents() {
+        return parents;
     }
 }
