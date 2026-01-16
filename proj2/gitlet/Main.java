@@ -1,5 +1,6 @@
 package gitlet;
 
+import javax.swing.*;
 import java.io.IOException;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
@@ -21,8 +22,8 @@ public class Main {
                 Repository.init();
                 break;
             case "add":
-                String fileName = args[1];
-                Repository.add(fileName);
+                String addFileName = args[1];
+                Repository.add(addFileName);
                 break;
             case "commit":
                 String message = args[1];
@@ -33,8 +34,11 @@ public class Main {
                 Repository.commit(message);
                 break;
             case "rm":
+                String rmFileName = args[1];
+                Repository.rm(rmFileName);
                 break;
             case "log":
+                Repository.log();
                 break;
             case "global-log":
                 break;
@@ -44,6 +48,14 @@ public class Main {
                 Repository.status();
                 break;
             case "checkout":
+                if (args.length > 1) {
+                    String fileName = args[2];
+                    Repository.checkout(fileName);
+                } else if (args.length > 2) {
+                    String commitID = args[1];
+                    String fileName = args[3];
+                    Repository.checkout(commitID, fileName);
+                }
                 break;
             case "branch":
                 break;
