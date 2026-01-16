@@ -1,11 +1,7 @@
 package gitlet;
 
-import org.w3c.dom.Comment;
-
-import javax.crypto.spec.PSource;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static gitlet.Utils.*;
@@ -48,6 +44,8 @@ public class Repository {
     public static final File ADDSTAGE_DIR = join(GITLET_DIR, "addstage");
     // removestage目录，暂存区中跟踪的删除文件
     public static final File REMOVESTAGE_DIR = join(GITLET_DIR, "removestage");
+    // 用于存放Commit对象，键为哈希值，值为Commit对象
+    private static final HashMap<String, Commit> commits = new HashMap<>();
 
     //获取当前分支
     private static File getCurrentBranch() {
@@ -61,6 +59,30 @@ public class Repository {
             // 如果分支的Commit的ID和当前分支指向的Commit的ID相等，则返回
             if (branchCommitID.equals(currentCommitID)) {
                 return branch;
+            }
+        }
+        return null;
+    }
+
+    // 获取当前的Commit
+    private static Commit getCurrentCommit() {
+        // 获取头指针指向的Commit的ID
+        String currentCommitId = Utils.readContentsAsString(HEAD);
+        // 获取当前的Commit
+        Commit currentCommit = commits.get(currentCommitId);
+        return currentCommit;
+    }
+
+    // 在Commit对象中查看文件是否被跟踪，如果没有被跟踪，返回null
+    private static Blobs findTrackedFile(Commit commit, String fileName) {
+        TreeMap<String, Blobs> blobs = commit.getBlobs();
+        // 在当前Commit中查看文件是否被跟踪
+        Set<String> blobsID = blobs.keySet();
+        for (String bolbID : blobsID) {
+            Blobs blob = blobs.get(bolbID);
+            // 如果文件名相同，说明被跟踪了
+            if (blob.getFileName().equals(fileName)) {
+                return blob;
             }
         }
         return null;
@@ -82,25 +104,26 @@ public class Repository {
         HEAD.createNewFile();
         ADDSTAGE_DIR.mkdir();
         REMOVESTAGE_DIR.mkdir();
-
     }
 
     public static void init() throws IOException {
         //创建文件和目录
         createFileAndDir();
-        //创建初始提交
+        // 创建初始提交
         Commit initialCommit = new Commit("initial commit", null, null);
-        //将初始提交写入COMMIT目录中
+        // 将初始提交写入COMMIT目录中
         File initialCommitFile = new File(COMMIT, initialCommit.getID());
         initialCommitFile.createNewFile();
         Utils.writeObject(initialCommitFile, initialCommit);
-        //master分支指向初始提交的ID
+        // master分支指向初始提交的ID
         File master = new File(HEADS_DIR, "master");
         master.createNewFile();
         String branchId = initialCommit.getID();
         Utils.writeContents(master, branchId);
-        //HEAD指针指向初始提交的ID
+        // HEAD指针指向初始提交的ID
         Utils.writeContents(HEAD, branchId);
+        // 将初始提交添加到commits映射中
+        commits.put(initialCommit.getID(), initialCommit);
     }
 
     //在dir目录下查找文件名为fileName的文件，如果没找到，返回null
@@ -134,29 +157,38 @@ public class Repository {
         //从工作目录中查找文件名为fileName的文件
         File workingDirectoryFile = findFile(CWD, fileName);
 
-        //在暂存区查找是否存在文件名相同的文件
+        // 如果工作目录中没有该文件，结束程序
+        if (workingDirectoryFile == null) {
+            System.out.println("File does not exist.");
+            System.exit(0);
+        }
+
+        // 在添加暂存区查找是否存在文件名相同的文件（Blobs对象的文件名）
         File addstageDirectoryFile = findBlobs(ADDSTAGE_DIR, fileName);
-        //如果存在，则将其删除
+        // 如果存在，则将其删除
         if (addstageDirectoryFile != null) {
             addstageDirectoryFile.delete();
+        }
+
+        // 在删除暂存区查找是否存在文件名相同的文件（Blobs对象的文件名）
+        File removeDirectoryFile = findBlobs(REMOVESTAGE_DIR, fileName);
+        // 如果存在，则将其删除
+        if (removeDirectoryFile != null) {
+            removeDirectoryFile.delete();
         }
 
         //创建文件对象
         Blobs blob = new Blobs(fileName, Utils.readContentsAsString(workingDirectoryFile));
         String addFileId = blob.getID();
 
-        //获取头指针指向的Commit的ID
-        String currentCommitId = Utils.readContentsAsString(HEAD);
         // 获取当前的Commit
-        File currentCommitFile = findFile(COMMIT, currentCommitId);
-        System.out.println(currentCommitFile);
-        Commit currentCommit = readObject(currentCommitFile, Commit.class);
+        Commit currentCommit = getCurrentCommit();
         //查找是否有与当前工作区文件ID相同的文件
-        TreeMap<String, Blobs> blobID = currentCommit.getBlobID();
+        TreeMap<String, Blobs> blobs = currentCommit.getBlobs();
         //如果有，则不进行暂存
-        if (blobID.containsKey(currentCommitId)) {
+        if (blobs.containsKey(addFileId)) {
             //如果存在于暂存区中，则从暂存区中移除
-            File stageFile = findFile(ADDSTAGE_DIR, currentCommitId);
+            File stageFile = findFile(ADDSTAGE_DIR, addFileId);
             if (stageFile != null) {
                 Utils.restrictedDelete(stageFile);
             }
@@ -169,7 +201,7 @@ public class Repository {
     }
 
     // 提交
-    public static void commit(String message) {
+    public static void commit(String message) throws IOException {
         // 获取添加暂存区的所有文件
         File[] addStagedFiles = ADDSTAGE_DIR.listFiles();
         // 获取移除暂存区的所有文件
@@ -181,16 +213,13 @@ public class Repository {
         }
         // 键为文件名，值为文件快照，新创建的Commit跟踪的文件
         TreeMap<String, Blobs> files = new TreeMap<>();
-        //获取头指针指向的Commit的ID
-        String currentCommitId = Utils.readContentsAsString(HEAD);
         // 获取当前的Commit
-        File currentCommitFile = findFile(COMMIT, currentCommitId);
-        Commit currentCommit = readObject(currentCommitFile, Commit.class);
+        Commit currentCommit = getCurrentCommit();
         // 获取当前的Commit中的所有的Blobs对象
-        TreeMap<String, Blobs> blobID = currentCommit.getBlobID();
-        Set<String> blobIDKeys = blobID.keySet();
-        for (String blobIDKey : blobIDKeys) {
-            Blobs blobIDValue = blobID.get(blobIDKey);
+        TreeMap<String, Blobs> blobs = currentCommit.getBlobs();
+        Set<String> blobsID = blobs.keySet();
+        for (String blobID : blobsID) {
+            Blobs blobIDValue = blobs.get(blobID);
             files.put(blobIDValue.getFileName(), blobIDValue);
         }
         // 如果添加暂存区不为空
@@ -198,9 +227,9 @@ public class Repository {
             for (File addStagedFile : addStagedFiles) {
                 // 将添加暂存区中的文件快照添加到files中
                 Blobs blob = Utils.readObject(addStagedFile, Blobs.class);
-                blobID.put(blob.getFileName(), blob);
-                // 将该文件从COMMIT目录中删除
-                Utils.restrictedDelete(blob.getID());
+                files.put(blob.getFileName(), blob);
+                // 将该文件从ADDSTAGE_DIR目录中删除
+                addStagedFile.delete();
             }
         }
         // 如果删除暂存区不为空
@@ -210,7 +239,7 @@ public class Repository {
                 Blobs blob = Utils.readObject(removeStagedFile, Blobs.class);
                 files.remove(blob.getFileName());
                 // 将该文件从BLOB目录中删除
-                Utils.restrictedDelete(blob.getID());
+                removeStagedFile.delete();
             }
         }
         // 新的Commit对象的blobID
@@ -221,14 +250,75 @@ public class Repository {
             newBlobID.put(blob.getID(), blob);
         }
         // 新的Commit对象的parentID
-        TreeMap<String, Commit> newParentID = new TreeMap<>();
-        newParentID.put(currentCommitId, currentCommit);
+        LinkedHashMap<String, Commit> newParentID = new LinkedHashMap<>();
+        newParentID.put(currentCommit.getID(), currentCommit);
         //创建新的Commit对象
         Commit newCurrentCommit = new Commit(message, newBlobID, newParentID);
         //HEAD和当前分支指向新的Commit对象
         String newCurrentCommitID = newCurrentCommit.getID();
         Utils.writeContents(HEAD, newCurrentCommitID);
         Utils.writeContents(getCurrentBranch(), newCurrentCommitID);
+        // 创建新的Commit对象放在Commit目录中
+        File newCurrentCommitFile = new File(COMMIT, newCurrentCommitID);
+        newCurrentCommitFile.createNewFile();
+        Utils.writeObject(newCurrentCommitFile, newCurrentCommit);
+        // 将新的Commit对象放在commits映射中
+        commits.put(newCurrentCommitID, newCurrentCommit);
+    }
+
+    // 删除
+    public static void rm(String fileName) throws IOException {
+        // 在添加暂存区查找是否有文件名相同的文件
+        File addStageFile = findBlobs(ADDSTAGE_DIR, fileName);
+        // 获取当前Commit
+        Commit currentCommit = getCurrentCommit();
+        // 查找当前Commit中被跟踪的文件
+        Blobs commitBlob = findTrackedFile(currentCommit, fileName);
+        // 在工作目录查找是否存在该文件
+        File workingDirectoryFile = findFile(CWD, fileName);
+        // 如果添加暂存区中不存在该文件且在当前Commit中也没有被跟踪，则打印错误信息，并终止程序
+        if (addStageFile == null && commitBlob == null) {
+            System.out.println("No reason to remove the file.");
+            System.exit(0);
+        }
+        // 如果在添加暂存区中存在该文件，则将其从添加暂存区中删除
+        if (addStageFile != null) {
+            addStageFile.delete();
+        }
+        // 如果该文件在当前提交中被追踪，则将其暂存为删除状态
+        if (commitBlob != null) {
+            String commitBlobID = commitBlob.getID();
+            File removeStageFile = new File(REMOVESTAGE_DIR, commitBlobID);
+            removeStageFile.createNewFile();
+            Utils.writeObject(removeStageFile, commitBlob);
+            // 如果用户尚未删除工作目录中的该文件，则将其从工作目录删除
+            if (workingDirectoryFile != null) {
+                workingDirectoryFile.delete();
+            }
+        }
+    }
+
+    // 打印日志信息
+    public static void log() {
+        Commit currentCommit = getCurrentCommit();
+        while (true) {
+            System.out.println("===");
+            System.out.println("commit " + currentCommit.getID());
+            System.out.println("Date: " + currentCommit.getDate());
+            System.out.println(currentCommit.getMessage());
+            System.out.println();
+
+            // 获取当前提交的父提交ID
+            LinkedHashMap<String, Commit> parents = currentCommit.getParents();
+            if (parents.size() == 0) {
+                break;
+            }
+            List<String> parentsID = new ArrayList<>(parents.keySet());
+            // 获取第一个父提交
+            Commit firstParentCommit = parents.get(parentsID.get(0));
+            // 将第一个父提交赋值给当前提交
+            currentCommit = firstParentCommit;
+        }
     }
 
     // 打印分支
@@ -331,5 +421,56 @@ public class Repository {
         System.out.println("=== Untracked Files ===");
         /*暂时不实现*/
         System.out.println();
+    }
+
+    // 检出
+    // 如果工作目录存在该文件，则直接覆盖
+    private static void workingDirectoryFunction(String fileName, Blobs commitBlob) {
+        // 查看工作目录是否存在该文件
+        File workingDirectoryFile = findFile(CWD, fileName);
+        // 如果存在，将其删除
+        if (workingDirectoryFile != null) {
+            workingDirectoryFile.delete();
+        }
+        // 将当前文件放入工作目录
+        String commitFileName = commitBlob.getFileName();
+        String commitFileContent = commitBlob.getFileContent();
+        File commitFile = new File(CWD, commitFileName);
+        Utils.writeContents(commitFile, commitFileContent);
+    }
+
+    // 第一种情况，传递文件名
+    public static void checkout(String fileName) {
+        // 获取当前提交
+        Commit currentCommit = getCurrentCommit();
+        // 查看该文件在当前Commit是否被跟踪
+        Blobs commitBlob = findTrackedFile(currentCommit, fileName);
+        // 如果没找到该文件，打印错误信息并终止程序
+        if (commitBlob == null) {
+            System.out.println("File does not exist in that commit.");
+            System.exit(0);
+        }
+        // 如果工作目录存在该文件，则直接覆盖
+        workingDirectoryFunction(fileName, commitBlob);
+    }
+
+    // 第二种情况，传递指定Commit的ID和文件名
+    public static void checkout(String commitId, String fileName) {
+        // 获取ID为commitID的Commit对象
+        Commit commit = commits.get(commitId);
+        // 如果commit为null，打印错误信息并终止程序
+        if (commit == null) {
+            System.out.println("No commit with that id exists.");
+            System.exit(0);
+        }
+        // 查看该文件在当前Commit是否被跟踪
+        Blobs commitBlob = findTrackedFile(commit, fileName);
+        // 如果没找到该文件，打印错误信息并终止程序
+        if (commitBlob == null) {
+            System.out.println("File does not exist in that commit.");
+            System.exit(0);
+        }
+        // 如果工作目录存在该文件，则直接覆盖
+        workingDirectoryFunction(fileName, commitBlob);
     }
 }
