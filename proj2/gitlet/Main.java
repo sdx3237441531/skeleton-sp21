@@ -11,7 +11,7 @@ public class Main {
     /** Usage: java gitlet.Main ARGS, where ARGS contains
      *  <COMMAND> <OPERAND1> <OPERAND2> ... 
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         if(args.length == 0) {
             System.out.println("Please enter a command.");
             System.exit(0);
@@ -48,15 +48,20 @@ public class Main {
                 Repository.status();
                 break;
             case "checkout":
-                if (args.length > 1) {
-                    String fileName = args[2];
-                    Repository.checkout(fileName);
-                } else if (args.length > 2) {
-                    String commitID = args[1];
-                    String fileName = args[3];
-                    Repository.checkout(commitID, fileName);
+                String fileName = null;
+                switch(args.length) {
+                    case 2:
+                        break;
+                    case 3:
+                        fileName = args[2];
+                        Repository.checkout(fileName);
+                        break;
+                    case 4:
+                        String commitID = args[1];
+                        fileName = args[3];
+                        Repository.checkout(commitID, fileName);
+                        break;
                 }
-                break;
             case "branch":
                 break;
             case "rm-branch":
