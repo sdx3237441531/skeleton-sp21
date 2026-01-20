@@ -950,7 +950,7 @@ public class Repository {
         }
         // 如果分割点与当前分支的头部提交是同一提交，则合并完成
         if (splitPointID.equals(currentBranchCommitID)) {
-            checkout(branchName, 0);
+            checkout(branchName,0);
             System.out.println("Current branch fast-forwarded.");
             return;
         }
