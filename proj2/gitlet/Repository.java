@@ -769,30 +769,30 @@ public class Repository {
     private static void joinFileContent(Blobs currentBranchBlob, Blobs givenBranchBlob) {
         // 打印冲突信息
         System.out.println("Encountered a merge conflict.");
-        String currentBranchFileContent = null;
-        String givenBranchFileContent = null;
         String fileName = null;
+        String fileContent = null;
         if (currentBranchBlob == null && givenBranchBlob == null) {
             return;
         } else if (currentBranchBlob == null) {
             // 如果在当前文件中已删除
-            currentBranchFileContent = "";
-            givenBranchFileContent = givenBranchBlob.getFileContent();
+            String givenBranchFileContent = givenBranchBlob.getFileContent();
+            fileContent = "<<<<<<< HEAD\n" + "=======\n" + givenBranchFileContent
+                    + "\n>>>>>>>";
             fileName = givenBranchBlob.getFileName();
         } else if (givenBranchBlob == null) {
             // 如果在给定文件中已删除
-            currentBranchFileContent = currentBranchBlob.getFileContent();
-            givenBranchFileContent = "";
+            String currentBranchFileContent = currentBranchBlob.getFileContent();
+            fileContent = "<<<<<<< HEAD\n" + currentBranchFileContent + "\n=======\n"
+                    + ">>>>>>>";
             fileName = currentBranchBlob.getFileName();
         } else {
             // 如果都没有删除
-            currentBranchFileContent = currentBranchBlob.getFileContent();
-            givenBranchFileContent = givenBranchBlob.getFileContent();
+            String currentBranchFileContent = currentBranchBlob.getFileContent();
+            String givenBranchFileContent = givenBranchBlob.getFileContent();
+            fileContent = "<<<<<<< HEAD\n" + currentBranchFileContent + "\n=======\n"
+                    + givenBranchFileContent + "\n>>>>>>>";
             fileName = currentBranchBlob.getFileName();
         }
-        // 拼接的文件信息
-        String fileContent = "<<<<<<< HEAD\n" + currentBranchFileContent + "=======\n" +
-                givenBranchFileContent + ">>>>>>>";
         File file = new File(CWD, fileName);
         // 在工作区创建该文件
         try {
