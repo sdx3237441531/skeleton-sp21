@@ -28,25 +28,13 @@ public class Main {
         }
         switch(firstArg) {
             case "init":
-                if (args.length != 1) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 Repository.init();
                 break;
             case "add":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 String addFileName = args[1];
                 Repository.add(addFileName);
                 break;
             case "commit":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 String message = args[1];
                 if (message.equals("")) {
                     System.out.println("Please enter a commit message.");
@@ -55,40 +43,20 @@ public class Main {
                 Repository.commit(message);
                 break;
             case "rm":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 String rmFileName = args[1];
                 Repository.rm(rmFileName);
                 break;
             case "log":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 Repository.log();
                 break;
             case "global-log":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 Repository.globalLog();
                 break;
             case "find":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 String commitMessage = args[1];
                 Repository.find(commitMessage);
                 break;
             case "status":
-                if (args.length != 1) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 Repository.status();
                 break;
             case "checkout":
@@ -99,56 +67,33 @@ public class Main {
                         Repository.checkout(branchName, 0);
                         break;
                     case 3:
-                        if (!args[1].equals("--")) {
-                            System.out.println("Incorrect operands.");
-                            System.exit(0);
-                        }
                         fileName = args[2];
                         Repository.checkout(fileName);
                         break;
                     case 4:
                         String commitID = args[1];
-                        if (!args[2].equals("--")) {
+                        if (args[2].equals("--") == false) {
                             System.out.println("Incorrect operands.");
                             System.exit(0);
                         }
                         fileName = args[3];
                         Repository.checkout(commitID, fileName);
                         break;
-                    default:
-                        System.out.println("Incorrect operands.");
-                        System.exit(0);
                 }
                 break;
             case "branch":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 String branchName = args[1];
                 Repository.branch(branchName);
                 break;
             case "rm-branch":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 String rmBranchName = args[1];
                 Repository.rmBranch(rmBranchName);
                 break;
             case "reset":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 String commitID = args[1];
                 Repository.reset(commitID);
                 break;
             case "merge":
-                if (args.length != 2) {
-                    System.out.println("Incorrect operands.");
-                    System.exit(0);
-                }
                 String mergeBranchName = args[1];
                 Repository.merge(mergeBranchName);
                 break;
