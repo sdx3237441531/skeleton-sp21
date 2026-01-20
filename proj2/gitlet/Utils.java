@@ -63,6 +63,7 @@ class Utils {
         return sha1(vals.toArray(new Object[vals.size()]));
     }
 
+    // 时间复杂度为O(1)
     /* FILE DELETION */
 
     /** Deletes FILE if it exists and is not a directory.  Returns true
@@ -89,6 +90,7 @@ class Utils {
     }
 
     /* READING AND WRITING FILE CONTENTS */
+    // 时间复杂度为O(E)，E为文件大小
 
     /** Return the entire contents of FILE as a byte array.  FILE must
      *  be a normal file.  Throws IllegalArgumentException
@@ -160,6 +162,7 @@ class Utils {
     /* DIRECTORIES */
 
     /** Filter out all but plain files. */
+    // 时间复杂度为O(1)
     private static final FilenameFilter PLAIN_FILES =
         new FilenameFilter() {
             @Override
@@ -171,6 +174,8 @@ class Utils {
     /** Returns a list of the names of all plain files in the directory DIR, in
      *  lexicographic order as Java Strings.  Returns null if DIR does
      *  not denote a directory. */
+    // 时间复杂度为O(NlogN)，N为dir目录中文件的总大小
+    // 获取dir目录下的所有文件的文件名，并将其排好序，作为列表返回
     static List<String> plainFilenamesIn(File dir) {
         String[] files = dir.list(PLAIN_FILES);
         if (files == null) {
@@ -184,6 +189,7 @@ class Utils {
     /** Returns a list of the names of all plain files in the directory DIR, in
      *  lexicographic order as Java Strings.  Returns null if DIR does
      *  not denote a directory. */
+    // 时间复杂度为O(NlogN)，N为dir目录中文件的总大小
     static List<String> plainFilenamesIn(String dir) {
         return plainFilenamesIn(new File(dir));
     }
@@ -193,6 +199,7 @@ class Utils {
     /** Return the concatentation of FIRST and OTHERS into a File designator,
      *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
      *  method. */
+    // 时间复杂度为O(1)
     static File join(String first, String... others) {
         return Paths.get(first, others).toFile();
     }
@@ -200,6 +207,7 @@ class Utils {
     /** Return the concatentation of FIRST and OTHERS into a File designator,
      *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
      *  method. */
+    // 时间复杂度为O(1)
     static File join(File first, String... others) {
         return Paths.get(first.getPath(), others).toFile();
     }
