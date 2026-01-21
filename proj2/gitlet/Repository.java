@@ -388,6 +388,84 @@ public class Repository {
         }
     }
 
+    // 打印已修改但未暂存的文件
+    private static void printModifiedButNotStaged() {
+        // 遍历工作目录中的所有文件
+        File[] workingDirectoryFiles = CWD.listFiles();
+        for (File workingDirectoryFile : workingDirectoryFiles) {
+            if (!workingDirectoryFile.isFile()) {
+                continue;
+            }
+            String workingDirectoryFileName = workingDirectoryFile.getName();
+            // 获取工作目录文件的文件内容
+            String workingDirectoryFileContent = Utils.readContentsAsString(workingDirectoryFile);
+            // 获取添加暂存区的文件
+            File addStagedBlobFile = Utils.join(ADDSTAGE_DIR, workingDirectoryFileName);
+            if (addStagedBlobFile.exists()) {
+                // 2.已暂存等待添加，但其内容与工作目录中的版本不同
+                // 如果该文件在暂存区存在
+                // 获取暂存区文件的文件内容
+                Blobs addStagedBlobs = Utils.readObject(addStagedBlobFile, Blobs.class);
+                String addStagedFileContent = addStagedBlobs.getFileContent();
+                // 如果暂存区文件的文件内容和工作目录文件的文件内容不相同
+                if (!addStagedFileContent.equals(workingDirectoryFileContent)) {
+                    System.out.println(workingDirectoryFileName + " (modified)");
+                }
+            } else {
+                // 1.在当前提交中被跟踪，在工作目录中被修改，但未暂存
+                // 在当前提交中查看该文件是否被跟踪
+                Commit currentCommit = getCurrentCommit();
+                Blobs trackedFile = findTrackedFile(currentCommit, workingDirectoryFileName);
+                if (trackedFile != null) {
+                    // 获取被跟踪文件的文件内容
+                    String trackedFileContent = trackedFile.getFileContent();
+                    // 如果文件内容不一致（说明被修改了），而且未被暂存
+                    if (!workingDirectoryFileContent.equals(trackedFileContent)) {
+                        System.out.println(workingDirectoryFileName + " (modified)");
+                    }
+                }
+            }
+        }
+
+        // 4.未暂存等待移除，但在当前提交中被跟踪且已从工作目录中删除
+        // 遍历当前提交的跟踪的所有文件ID
+        Commit currentCommit = getCurrentCommit();
+        TreeSet<String> currentCommitBlobsID = currentCommit.getBlobsID();
+        for (String currentCommitBlobID : currentCommitBlobsID) {
+            // 获取跟踪的Blobs对象
+            File currentCommitBlobFile = Utils.join(BLOB, currentCommitBlobID);
+            Blobs currentCommitBlob = Utils.readObject(currentCommitBlobFile, Blobs.class);
+            // 获取跟踪的文件名
+            String trackedFileName = currentCommitBlob.getFileName();
+            // 获取移除暂存区的文件
+            File removeStagedFile = Utils.join(REMOVESTAGE_DIR, trackedFileName);
+            // 获取工作目录的文件
+            File workingDirectoryFile = Utils.join(CWD, trackedFileName);
+            // 如果在删除暂存区不存在并且在工作目录中不存早
+            if (!removeStagedFile.exists() && !workingDirectoryFile.exists()) {
+                System.out.println(trackedFileName + " (deleted)");
+            }
+        }
+    }
+
+    // 打印为跟踪的文件
+    private static void printUntracked() {
+        // 获取添加暂存区所有文件的文件名
+        List<String> addStagedFileNames = Utils.plainFilenamesIn(ADDSTAGE_DIR);
+        // 获取当前分支的所有提交
+        Commit currentCommit = getCurrentCommit();
+        TreeSet<String> currentCommitFileNames = getCommitFileNames(currentCommit);
+        // 遍历工作目录中的所有文件名
+        List<String> workingDirectoryFileNames = Utils.plainFilenamesIn(CWD);
+        for (String workingDirectoryFileName : workingDirectoryFileNames) {
+            // 如果该文件既未暂存等待添加也未被跟踪
+            if (!currentCommitFileNames.contains(workingDirectoryFileName) &&
+                    !addStagedFileNames.contains(workingDirectoryFileName)) {
+                System.out.println(workingDirectoryFileName);
+            }
+        }
+    }
+
     // O(NlogN) -> O(N)
     public static void status() {
         // 分支
@@ -410,12 +488,12 @@ public class Repository {
 
         // 已修改但未暂存
         System.out.println("=== Modifications Not Staged For Commit ===");
-        /*暂时不实现*/
+        printModifiedButNotStaged();
         System.out.println();
 
         // 未跟踪文件
         System.out.println("=== Untracked Files ===");
-        /*暂时不实现*/
+        printUntracked();
         System.out.println();
     }
 
@@ -495,6 +573,7 @@ public class Repository {
     }
 
     // O(NlogN) -> O(NlogN)
+    // 获取给定提交的所有文件名
     private static TreeSet<String> getCommitFileNames(Commit commit) {
         TreeSet<String> commitFileNames = new TreeSet<>();
         TreeSet<String> blobsID = commit.getBlobsID();
