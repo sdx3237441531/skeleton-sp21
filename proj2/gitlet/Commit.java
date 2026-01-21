@@ -1,26 +1,9 @@
 package gitlet;
 
-// TODO: any imports you need here
-
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * Represents a gitlet commit object.
- *  TODO: It's a good idea to give a description here of what else this Class
- *  does at a high level.
- *
- * @author TODO
- */
 public class Commit implements Serializable {
-    /**
-     * TODO: add instance variables here.
-     * <p>
-     * List all instance variables of the Commit class here with a useful
-     * comment above them describing what that variable represents and how that
-     * variable is used. We've provided one example for `message`.
-     */
     private String ID; // SHA-1 ID
     private String date; // 提交日期
     private String message; // 日志消息
