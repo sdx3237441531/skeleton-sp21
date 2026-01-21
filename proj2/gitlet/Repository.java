@@ -441,7 +441,7 @@ public class Repository {
             File removeStagedFile = Utils.join(REMOVESTAGE_DIR, trackedFileName);
             // 获取工作目录的文件
             File workingDirectoryFile = Utils.join(CWD, trackedFileName);
-            // 如果在删除暂存区不存在并且在工作目录中不存早
+            // 如果在删除暂存区不存在并且在工作目录中不存在
             if (!removeStagedFile.exists() && !workingDirectoryFile.exists()) {
                 System.out.println(trackedFileName + " (deleted)");
             }
@@ -488,12 +488,12 @@ public class Repository {
 
         // 已修改但未暂存
         System.out.println("=== Modifications Not Staged For Commit ===");
-        printModifiedButNotStaged();
+        //printModifiedButNotStaged();
         System.out.println();
 
         // 未跟踪文件
         System.out.println("=== Untracked Files ===");
-        printUntracked();
+        //printUntracked();
         System.out.println();
     }
 
@@ -1183,3 +1183,5 @@ public class Repository {
         mergeCommit(message, currentBranchCommit, givenBranchCommit);
     }
 }
+
+// status的Untracted和Modified存在问题
