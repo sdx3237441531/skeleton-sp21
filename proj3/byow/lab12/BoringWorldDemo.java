@@ -5,7 +5,7 @@ import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
 /**
- *  Draws a world that is mostly empty except for a small region.
+ *  绘制一个几乎为空、仅包含一小片区域的世界
  */
 public class BoringWorldDemo {
 
@@ -13,28 +13,26 @@ public class BoringWorldDemo {
     private static final int HEIGHT = 30;
 
     public static void main(String[] args) {
-        // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
+        // 使用尺寸为 WIDTH × HEIGHT 的窗口初始化图块渲染引擎
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
 
-        // initialize tiles
+        // 初始化图块
         TETile[][] world = new TETile[WIDTH][HEIGHT];
         for (int x = 0; x < WIDTH; x += 1) {
             for (int y = 0; y < HEIGHT; y += 1) {
-                world[x][y] = Tileset.NOTHING;
-            }
-        }
-
-        // fills in a block 14 tiles wide by 4 tiles tall
-        for (int x = 20; x < 35; x += 1) {
-            for (int y = 5; y < 10; y += 1) {
                 world[x][y] = Tileset.WALL;
             }
         }
 
-        // draws the world to the screen
+        // 填充一个宽15个图块、高5个图块的区块
+        for (int x = 20; x < 35; x += 1) {
+            for (int y = 5; y < 10; y += 1) {
+                world[x][y] = Tileset.UNLOCKED_DOOR;
+            }
+        }
+
+        // 将世界绘制到屏幕上
         ter.renderFrame(world);
     }
-
-
 }
