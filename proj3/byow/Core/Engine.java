@@ -47,7 +47,7 @@ public class Engine {
         // 简洁而清晰的接口。
         input = input.toUpperCase();
         char newOrLoad = input.charAt(0);
-        long seed = Integer.parseInt(input.substring(1, input.indexOf('S')));
+        long seed = Long.parseLong(input.substring(1, input.indexOf('S')));
 
         TETile[][] finalWorldFrame = null;
 
