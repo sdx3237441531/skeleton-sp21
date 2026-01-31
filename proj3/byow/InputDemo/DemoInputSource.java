@@ -1,9 +1,9 @@
 package byow.InputDemo;
 
 /**
- * Created by hug.
- * Demonstrates how a single interface can be used to provide input
- * from they keyboard, from a random sequence, from a string, or whatever else.
+ * 由 hug 创建。
+ * 演示了如何使用单一接口来提供输入源，
+ * 可来自键盘、随机序列、字符串或其他任意来源。
  */
 public class DemoInputSource {
     private static final int KEYBOARD = 0;
