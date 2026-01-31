@@ -1,34 +1,32 @@
 package byow.Core;
 
+// 方便处理随机性相关操作的实用工具方法
+
 import java.util.Random;
 
 /**
- * A library of static methods to generate pseudo-random numbers from
- * different distributions (bernoulli, uniform, gaussian, discrete,
- * and exponential). Also includes methods for shuffling an array and
- * other randomness related stuff you might want to do. Feel free to
- * modify this file.
+ * 一个静态方法库，用于从不同分布（伯努利、均匀、高斯、离散和指数）生成伪随机数。
+ * 还包括用于打乱数组以及其他可能需要的随机相关操作的方法。可随意修改此文件。
  * <p>
- * Adapted from https://introcs.cs.princeton.edu/java/22library/StdRandom.java.html
-*
+ * 改编自 https://introcs.cs.princeton.edu/java/22library/StdRandom.java.html
  */
 public class RandomUtils {
 
     /**
-     * Returns a random real number uniformly in [0, 1).
+     * 返回一个在 [0, 1) 区间内均匀分布的随机实数。
      *
-     * @return a random real number uniformly in [0, 1)
+     * @return 一个在 [0, 1) 区间内均匀分布的随机实数
      */
     public static double uniform(Random random) {
         return random.nextDouble();
     }
 
     /**
-     * Returns a random integer uniformly in [0, n).
+     * 返回一个在 [0, n) 区间内均匀分布的随机整数。
      *
-     * @param n number of possible integers
-     * @return a random integer uniformly between 0 (inclusive) and {@code n} (exclusive)
-     * @throws IllegalArgumentException if {@code n <= 0}
+     * @param n 可能的整数数量
+     * @return 一个在 0（包含）到 {@code n}（不包含）之间均匀分布的随机整数
+     * @throws IllegalArgumentException 如果 {@code n <= 0}
      */
     public static int uniform(Random random, int n) {
         if (n <= 0) {
@@ -39,11 +37,11 @@ public class RandomUtils {
 
 
     /**
-     * Returns a random long integer uniformly in [0, n).
+     * 返回一个在 [0, n) 区间内均匀分布的随机长整数。
      *
-     * @param n number of possible {@code long} integers
-     * @return a random long integer uniformly between 0 (inclusive) and {@code n} (exclusive)
-     * @throws IllegalArgumentException if {@code n <= 0}
+     * @param n 可能的 {@code long} 整数数量
+     * @return 一个在 0（包含）到 {@code n}（不包含）之间均匀分布的随机长整数
+     * @throws IllegalArgumentException 如果 {@code n <= 0}
      */
     public static long uniform(Random random, long n) {
         if (n <= 0L) {
@@ -68,19 +66,17 @@ public class RandomUtils {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    //  STATIC METHODS BELOW RELY ON JAVA.UTIL.RANDOM ONLY INDIRECTLY VIA
-    //  THE STATIC METHODS ABOVE.
+    //  以下静态方法仅通过上方的静态方法间接依赖于 java.util.Random。
     ///////////////////////////////////////////////////////////////////////////
 
-
     /**
-     * Returns a random integer uniformly in [a, b).
+     * 返回一个在 [a, b) 区间内均匀分布的随机整数。
      *
-     * @param a the left endpoint
-     * @param b the right endpoint
-     * @return a random integer uniformly in [a, b)
-     * @throws IllegalArgumentException if {@code b <= a}
-     * @throws IllegalArgumentException if {@code b - a >= Integer.MAX_VALUE}
+     * @param a 左端点（包含）
+     * @param b 右端点（不包含）
+     * @return 一个在 [a, b) 区间内均匀分布的随机整数
+     * @throws IllegalArgumentException 如果 {@code b <= a}
+     * @throws IllegalArgumentException 如果 {@code b - a >= Integer.MAX_VALUE}
      */
     public static int uniform(Random random, int a, int b) {
         if ((b <= a) || ((long) b - a >= Integer.MAX_VALUE)) {
