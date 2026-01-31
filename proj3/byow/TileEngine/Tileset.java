@@ -1,19 +1,19 @@
 package byow.TileEngine;
 
+// 用于表示世界中瓦片的类型
+
 import java.awt.Color;
 
 /**
- * Contains constant tile objects, to avoid having to remake the same tiles in different parts of
- * the code.
+ * 包含常量图块对象，避免在代码的不同部分重复创建相同的图块。
  *
- * You are free to (and encouraged to) create and add your own tiles to this file. This file will
- * be turned in with the rest of your code.
+ * 你可以（并且鼓励）创建并向此文件添加自己的图块。此文件将随你的其余代码一起提交。
  *
- * Ex:
+ * 示例：
  *      world[x][y] = Tileset.FLOOR;
  *
- * The style checker may crash when you try to style check this file due to use of unicode
- * characters. This is OK.
+ * 当你尝试对此文件进行风格检查时，由于使用了 Unicode 字符，风格检查器可能会崩溃。
+ * 这是正常的。
  */
 
 public class Tileset {
