@@ -1,6 +1,8 @@
 package byow.Core;
 
-public class Room implements Comparable<Room> {
+import java.io.Serializable;
+
+public class Room implements Comparable<Room>, Serializable {
     private int xOff;
     private int yOff;
     private int width;
