@@ -3,6 +3,7 @@ package byow.TileEngine;
 // 提供的瓦片库
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -22,7 +23,7 @@ import byow.Core.RandomUtils;
  * 如果您愿意，可以自行实现可变的 TETile 类。
  */
 
-public class TETile {
+public class TETile implements Serializable {
     private final char character; // Do not rename character or the autograder will break.
     private final Color textColor;
     private final Color backgroundColor;
