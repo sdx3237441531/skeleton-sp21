@@ -71,28 +71,24 @@ public class Engine {
         for (int i = 0; i < input.length(); i += 1) {
             // 获取化身
             Avatar avatar = world.getAvatar();
-            switch (input.charAt(i)) {
-                case ':':
-                    i += 1;
-                    Save s = new Save();
-                    s.save(world);
-                    break;
-                case 'W':
-                    UpAction ua = new UpAction();
-                    ua.action(world, avatar);
-                    break;
-                case 'A':
-                    LeftAction la = new LeftAction();
-                    la.action(world, avatar);
-                    break;
-                case 'S':
-                    DownAction da = new DownAction();
-                    da.action(world, avatar);
-                    break;
-                case 'D':
-                    RightAction ra = new RightAction();
-                    ra.action(world, avatar);
-                    break;
+            char choice = input.charAt(i);
+            if (choice == ':') {
+                i += 1;
+                Save s = new Save();
+                s.save(world);
+                break;
+            } else if (choice == 'W') {
+                UpAction ua = new UpAction();
+                ua.action(world, avatar);
+            } else if (choice == 'A') {
+                LeftAction la = new LeftAction();
+                la.action(world, avatar);
+            } else if (choice == 'S') {
+                DownAction da = new DownAction();
+                da.action(world, avatar);
+            } else if (choice == 'D') {
+                RightAction ra = new RightAction();
+                ra.action(world, avatar);
             }
         }
 
