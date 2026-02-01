@@ -3,7 +3,7 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
-public class UpAction implements Action{
+public class UpAction implements Action {
     @Override
     public void action(World w, Avatar avatar) {
         int x = avatar.getX();
