@@ -1,12 +1,8 @@
 package byow.Core;
 
-import byow.TileEngine.Tileset;
+import java.io.Serializable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-public class Avatar {
+public class Avatar implements Serializable {
     private int x;
     private int y;
 
