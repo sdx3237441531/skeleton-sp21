@@ -220,9 +220,8 @@ public class World implements Serializable {
         if (direction == 0) {
             // 向下画一列墙
             addOneColumnWallOnDown(r1, r2, startY, endX);
-        }
-        // 右上方
-        else {
+        } else {
+            // 右上方
             // 向上画一列强
             addOneColumnWallOnUp(r1, r2, startY, endX);
         }
