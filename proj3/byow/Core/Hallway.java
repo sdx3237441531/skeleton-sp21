@@ -3,11 +3,12 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Hallway {
+public class Hallway implements Serializable {
     private int width;
     private List<Room> rooms = new ArrayList<>();
     private int startY;
