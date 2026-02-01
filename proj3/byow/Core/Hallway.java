@@ -76,9 +76,8 @@ public class Hallway implements Serializable {
         if (r2.getxOff() >= r1.getxOff() && r2.getyOff() <= r1.getyOff()) {
             this.direction = 0;
             rightDownConnect(rand, world, r1, r2);
-        }
-        // r2位于r1的右上方
-        else if (r2.getxOff() >= r1.getxOff() && r2.getyOff() >= r1.getyOff()) {
+        } else if (r2.getxOff() >= r1.getxOff() && r2.getyOff() >= r1.getyOff()) {
+            // r2位于r1的右上方
             this.direction = 1;
             rightUpConnect(rand, world, r1, r2);
         }
