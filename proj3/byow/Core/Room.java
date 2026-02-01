@@ -24,7 +24,7 @@ public class Room implements Comparable<Room>, Serializable {
         } else {
             if (o.yOff > this.yOff) {
                 return -1;
-            } else if (o.yOff < this.yOff){
+            } else if (o.yOff < this.yOff) {
                 return 1;
             } else {
                 return 0;
