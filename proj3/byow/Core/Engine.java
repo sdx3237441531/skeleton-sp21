@@ -45,19 +45,59 @@ public class Engine {
         //
         // 参考 proj3.byow.InputDemo 了解如何创建适用于多种输入类型的
         // 简洁而清晰的接口。
+
+        // 将input的所有字母都转换为大写字母
         input = input.toUpperCase();
+        // 获取第一个字母，如果是N，则创建新世界，如果是L，则加载世界
         char newOrLoad = input.charAt(0);
-        long seed = Long.parseLong(input.substring(1, input.indexOf('S')));
 
         TETile[][] finalWorldFrame = null;
+        World world = null;
 
         if (newOrLoad == 'N') {
             // 创建新世界
-            NewWorld nw = new NewWorld(WIDTH, HEIGHT, seed);
-            finalWorldFrame = nw.getWorld();
+            int SIndex = input.indexOf('S');
+            long seed = Long.parseLong(input.substring(1, SIndex));
+            world = new World(WIDTH, HEIGHT, seed);
+            world.createWorld();
+            input = input.substring(SIndex + 1);
         } else {
             // 加载世界
+            Load l = new Load();
+            world = l.load();
+            input = input.substring(1);
         }
+
+        for (int i = 0; i < input.length(); i += 1) {
+            // 获取化身
+            Avatar avatar = world.getAvatar();
+            switch (input.charAt(i)) {
+                case ':':
+                    i += 1;
+                    Save s = new Save();
+                    s.save(world);
+                    break;
+                case 'W':
+                    UpAction ua = new UpAction();
+                    ua.action(world, avatar);
+                    break;
+                case 'A':
+                    LeftAction la = new LeftAction();
+                    la.action(world, avatar);
+                    break;
+                case 'S':
+                    DownAction da = new DownAction();
+                    da.action(world, avatar);
+                    break;
+                case 'D':
+                    RightAction ra = new RightAction();
+                    ra.action(world, avatar);
+                    break;
+            }
+        }
+
+        // 获取数组
+        finalWorldFrame = world.getWorld();
 
         return finalWorldFrame;
     }
