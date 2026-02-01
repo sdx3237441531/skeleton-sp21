@@ -17,7 +17,6 @@ public class Save {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
             oos.writeObject(world);
-            System.exit(0);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
